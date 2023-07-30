@@ -1,0 +1,44 @@
+#contenedor_formulario{
+    border-style: solid;
+    border-color: rgb(23, 162, 218);
+    border-width: 3px;
+    padding: 50px;
+    border-radius: 25px;
+}
+#imagen_login{
+    height: 100vh;
+    width: 50vw;
+}
+#div_formLogin{
+    position: relative;
+    top: 100px;
+    left: 250px;
+    display: inline-block;
+}
+#div_imagen{
+    display: inline-block;
+}
+.label{
+    font-size: 25px;
+    color: rgb(57, 59, 180);
+}
+#div_button{
+    margin-top: 50px;
+    text-align: center;
+}
+#contenedor_login{
+    background-color: rgb(199, 223, 224);
+}
+.input_index{
+    background-color: rgb(216, 231, 238);
+}
+.tamaño_celda{
+    width: 100px;
+}
+.tabla_material{
+    width: 1500px;
+}
+.contenedor_tabla_material{
+    position: relative;
+    left: 150px;
+}
