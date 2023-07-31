@@ -20,10 +20,10 @@
 		<button class="btn btn-primary ">Nuevo </button>
 	</div>
 
-	<!-- Modal -->
+	<!-- Modal Nuevo Material -->
 	<div class="modal fade" id="modalRegistroMaterial" tabindex="-1" aria-labelledby="exampleModalLabel"
 		aria-hidden="true">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">:::: REGISTRO DE MATERIAL ::::</h5>
@@ -32,7 +32,44 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					...
+					<form th:action="@{/material/registrar}" method="post" class="needs-validation" novalidate>
+						<div class="form-row">
+							<div class="col-md-12 mb-3">
+								<label for="validationCustom01">Descripción de material</label>
+								<input name="descripcionMaterial" type="text" class="form-control" id="validationCustom01" required>
+								<div class="invalid-feedback">
+									Ingrese una descripción.
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-6 mb-3">
+								<label for="validationCustom02">Aerolínea</label>
+								<select name="aerolinea" class="form-control mr-sm-2" id="validationCustom02" required>
+									<option value="" selected>--Seleccione--</option>
+									<option name="cboAerolinea" th:each="comboAer:${aerolineas}"
+										th:utext="${comboAer.indicativoAerolinea}"
+										th:value="${comboAer.codigoAerolinea}"></option>
+								</select>
+								<div class="invalid-feedback">
+									Seleccione una aerolínea.
+								</div>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="validationCustom02">Servicio</label>
+								<select name="tipoServicio" class="form-control mr-sm-2" id="validationCustom02" required>
+									<option value="" selected>--Seleccione--</option>
+									<option name="cboServicio" th:each="comboSer:${servicios}"
+										th:text="${comboSer.nombreServicio}" th:value="${comboSer.codigoServicio}">
+									</option>
+								</select>
+								<div class="invalid-feedback">
+									Seleccione un servicio.
+								</div>
+							</div>
+						</div>
+						<button class="btn btn-primary" type="submit">Agregar</button>
+					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -102,7 +139,7 @@
 			let aerolinea = $("#aer").val();
 			let servicio = $("#ser").val();
 
-			
+
 			let celdaYbotonActualizar = `<td class="tamaño_celda" style="text-align: center;"><button class="btn btn-warning"><i
 									class="bi bi-pencil"></i></button></td>`;
 			let celdaYbotonEliminar = `<td class="tamaño_celda" style="text-align: center;"><button class="btn btn-danger"><i
@@ -121,6 +158,27 @@
 
 			})
 		})
+	</script>
+
+	<script>
+			// Example starter JavaScript for disabling form submissions if there are invalid fields
+			(function () {
+				'use strict';
+				window.addEventListener('load', function () {
+					// Fetch all the forms we want to apply custom Bootstrap validation styles to
+					var forms = document.getElementsByClassName('needs-validation');
+					// Loop over them and prevent submission
+					var validation = Array.prototype.filter.call(forms, function (form) {
+						form.addEventListener('submit', function (event) {
+							if (form.checkValidity() === false) {
+								event.preventDefault();
+								event.stopPropagation();
+							}
+							form.classList.add('was-validated');
+						}, false);
+					});
+				}, false);
+			})();
 	</script>
 
 </body>
