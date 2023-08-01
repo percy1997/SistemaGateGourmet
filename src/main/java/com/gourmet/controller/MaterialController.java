@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gourmet.entity.Material;
 import com.gourmet.service.AerolineaServices;
@@ -43,15 +44,33 @@ public class MaterialController {
 		if(codAer != 0 && codSer != 0) {
 		return matSer.materialPorSelect(codAer, codSer);
 		} else if (codAer == 0){
-			return matSer.materialPorServicio(codSer);
+			return matSer.materialPorServicio(codSer);			
 		} else {
 			return matSer.materialPorAerolinea(codAer);
 		}
 	}
 	
 	@PostMapping("/registrar")
-	public String registrarMaterial(Material material) {
+	public String registrarMaterial(Material material, @RequestParam("codigoMaterial")int cod,
+			RedirectAttributes redirect) {
+		if(cod == 0) {
 		matSer.registrar(material);
+		redirect.addFlashAttribute("MENSAJE","Material registrado");
+		return "redirect:/material";
+		} else 
+			matSer.actualizar(material);
+		redirect.addFlashAttribute("MENSAJE","Material actualizado");
+			return "redirect:/material";				
+	}
+	
+	@RequestMapping("/obtenerMaterial")
+	@ResponseBody
+	public Material obtenerMaterial(@RequestParam("cod") int cod) {
+		return matSer.buscarPorCodigo(cod);
+	}
+	
+	@RequestMapping("/eliminar")
+	public String eliminarMaterial() {
 		return "redirect:/material";
 	}
 	
