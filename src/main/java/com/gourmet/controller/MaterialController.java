@@ -70,7 +70,8 @@ public class MaterialController {
 	}
 	
 	@RequestMapping("/eliminar")
-	public String eliminarMaterial() {
+	public String eliminarMaterial(@RequestParam("codigo-eliminar") int cod) {
+		matSer.eliminar(cod);
 		return "redirect:/material";
 	}
 	

@@ -11,6 +11,8 @@
 
 	<link rel="stylesheet" th:href="@{/resources/css/styles.css}">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	<link rel="stylesheet" th:href="@{/resources/alertifyjs/css/alertify.css}">
+	<link rel="stylesheet" th:href="@{/resources/alertifyjs/css/alertify.min.css}">
 </head>
 
 <body id="fondo_material">
@@ -129,13 +131,20 @@
 						<td class="tamaño_celda" style="text-align: center;"><button
 								class="btn btn-warning btn-actualizar" data-toggle="modal"
 								data-target="#modalRegistroMaterial"><i class="bi bi-pencil"></i></button></td>
-						<td class="tamaño_celda" style="text-align: center;"><button class="btn btn-danger"><i
-									class="bi bi-trash"></i></button></td>
+						<td class="tamaño_celda" style="text-align: center;"><button
+								class="btn btn-danger btn-eliminar"><i class="bi bi-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
+
+	<!--Formulario boton eliminar-->
+	<form id="formBotonEliminar" method="post" action="/material/eliminar">
+		<input name="codigo-eliminar" type="hidden" value="" id="codigo-eliminar">
+	</form>
+	<!--fin  formulario-->
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 	<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
@@ -143,14 +152,16 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
 		integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
 		crossorigin="anonymous"></script>
-	<script	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script th:src="@{/resources/alertifyjs/alertify.js}"></script>
+	<script th:src="@{/resources/alertifyjs/alertify.min.js}"></script>
 	<script th:inline="javascript" th:if="${MENSAJE!=null}">
 		//recuperar atributo "MENSAJE"
 		let msg =/*[[${MENSAJE}]]*/
-toastr.success(msg, toastr.options = {
-			"timeOut": "2000",
-		});
+			toastr.success(msg, toastr.options = {
+				"timeOut": "2000",
+			});
 	</script>
 
 
@@ -158,10 +169,10 @@ toastr.success(msg, toastr.options = {
 		//Limpiar el formulario de registro
 		$(document).on("click", ".btn-nuevo", function () {
 			$("#titulo").text("REGISTRAR");
-			$("#formRegistroMaterial").trigger("reset");			
+			$("#formRegistroMaterial").trigger("reset");
 		})
 	</script>
-	
+
 	<script>
 		$(document).on("click", "#btn-buscar", function () {
 
@@ -171,8 +182,8 @@ toastr.success(msg, toastr.options = {
 
 			let celdaYbotonActualizar = `<td class="tamaño_celda" style="text-align: center;"><button class="btn btn-warning btn-actualizar" data-toggle="modal" data-target="#modalRegistroMaterial"><i
 									class="bi bi-pencil"></i></button></td>`;
-			let celdaYbotonEliminar = `<td class="tamaño_celda" style="text-align: center;"><button class="btn btn-danger"><i
-									class="bi bi-trash"></i></button></td>`;
+			let celdaYbotonEliminar = `<td class="tamaño_celda" style="text-align: center;"><button
+								class="btn btn-danger btn-eliminar"><i class="bi bi-trash"></i></button></td>`;
 			//reorganizar tabla
 			$("#tableMaterial tbody").empty();
 			$.get("/material/listarPorSelect?cboAerolinea=" + aerolinea + "&cboServicio=" + servicio, function (response) {
@@ -202,6 +213,22 @@ toastr.success(msg, toastr.options = {
 				$("#aerolinea").val(response.aerolinea.codigoAerolinea);
 				$("#tipoServicio").val(response.tipoServicio.codigoServicio);
 			})
+		})
+	</script>
+
+	<script>
+		$(document).on("click", ".btn-eliminar", function () {
+			let cod;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			$("#codigo-eliminar").val(cod);
+			alertify.confirm("SISTEMA", "Seguro de eliminar!",
+				function () {//siiiiiiiiiiiiiiii
+					$("#formBotonEliminar").submit();
+				},
+				function () {//noooooooooooooooooo 
+					alertify.error('Cancelado!')
+				}).
+				set('labels', {ok: 'Si', cancel: 'No'});
 		})
 	</script>
 
