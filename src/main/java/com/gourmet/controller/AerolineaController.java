@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.gourmet.entity.Aerolinea;
 import com.gourmet.service.AerolineaServices;
 
 @Controller
@@ -24,7 +25,8 @@ public class AerolineaController {
 	
 	//registrar una aerolinea
 	@PostMapping("/registrar")
-	public String registrarAerolinea() {
-		return "aerolinea";
+	public String registrarAerolinea(Aerolinea aerolinea) {
+		aerSer.registrar(aerolinea);
+		return "redirect:/aerolinea";
 	}
 }

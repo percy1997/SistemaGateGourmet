@@ -19,12 +19,12 @@
 
 	<br>
 	<div style="margin-left: 170px;" class="form-inline my-3 contenedor_tabla_material">
-		<button class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroAerolinea"><i
+		<button onclick="ResetForm(document.getElementById('formRegistroAerolinea'))" class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroAerolinea"><i
 				class="bi bi-plus-square"></i> Nueva Aerolínea</button>
 		<button class="btn btn-primary ">Nuevo </button>
 	</div>
 
-<!-- Modal Nueva Aerolinea -->
+	<!-- Modal Nueva Aerolinea -->
 	<div class="modal fade" id="modalRegistroAerolinea" tabindex="-1" aria-labelledby="exampleModalLabel"
 		aria-hidden="true">
 		<div class="modal-dialog">
@@ -37,17 +37,34 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form id="formRegistroAerolinea" action="" method="post"
+				<form id="formRegistroAerolinea" th:action="@{/aerolinea/registrar}" method="post"
 					class="needs-validation" novalidate>
-					<input type="hidden" id="codigoAerolinea" name="codigoAerolinea" value="0">
 					<div class="modal-body">
 						<div class="form-row">
 							<div class="col-md-12 mb-3">
 								<label for="nombreAerolinea">Nombre de aerolínea</label>
-								<input id="nombreAerolinea" name="nombreAerolinea" type="text"
-									class="form-control" required>
+								<input id="nombreAerolinea" name="nombreAerolinea" type="text" class="form-control"
+									required>
 								<div class="invalid-feedback">
 									Ingrese un nombre.
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-6 mb-3">
+								<label for="abreviaturaAerolinea">Abreviatura IATA</label>
+								<input minlength="2" maxlength="2" id="abreviaturaAerolinea" name="abreviaturaAerolinea"
+									type="text" class="form-control" required>
+								<div class="invalid-feedback">
+									Ingrese código IATA.
+								</div>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="indicativoAerolinea">Indicativo</label>
+								<input id="indicativoAerolinea" name="indicativoAerolinea" type="text"
+									class="form-control" required>
+								<div class="invalid-feedback">
+									Ingrese indicativo de la aerolínea.
 								</div>
 							</div>
 						</div>
@@ -72,7 +89,7 @@
 					<tr>
 						<th>Código</th>
 						<th>Aerolínea</th>
-						<th>Abreviatura IATA</th>
+						<th>Código IATA</th>
 						<th>Indicativo</th>
 						<th></th>
 						<th></th>
@@ -106,7 +123,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 	<script th:src="@{/resources/alertifyjs/alertify.js}"></script>
 	<script th:src="@{/resources/alertifyjs/alertify.min.js}"></script>
-	
+
 	<script th:inline="javascript" th:if="${MENSAJE!=null}">
 		//recuperar atributo "MENSAJE"
 		let msg =/*[[${MENSAJE}]]*/
@@ -115,6 +132,44 @@
 			});
 	</script>
 
+	<script>
+		//limpiar formulario
+		$(document).on("click", ".btn-nuevo", function(){
+			$("#formRegistroAerolinea").trigger("reset");			
+		})
+		
+	</script>
+
+<script>
+	//metodo para resetear los campos con mensajes de validacion
+	function ResetForm(form) {
+    form.classList.remove('was-validated');
+    form.querySelectorAll(".is-invalid").forEach(el => el.classList.remove('is-invalid'));
+    
+    form.reset();
+}
+</script>
+
+	<script>
+		// Example starter JavaScript for disabling form submissions if there are invalid fields
+		(function () {
+			'use strict';
+			window.addEventListener('load', function () {
+				// Fetch all the forms we want to apply custom Bootstrap validation styles to
+				var forms = document.getElementsByClassName('needs-validation');
+				// Loop over them and prevent submission
+				var validation = Array.prototype.filter.call(forms, function (form) {
+					form.addEventListener('submit', function (event) {
+						if (form.checkValidity() === false) {
+							event.preventDefault();
+							event.stopPropagation();
+						}
+						form.classList.add('was-validated');
+					}, false);
+				});
+			}, false);
+		})();
+	</script>
 </body>
 
 </html>
