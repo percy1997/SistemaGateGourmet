@@ -29,5 +29,10 @@ public class AerolineaServices {
 		return repo.findAll();
 	}
 	
+	//obtener aerolinea por codigo
+	public Aerolinea obtenerAerolineaPorCodigo(int cod) {
+		return repo.findById(cod).orElse(null);
+	}
+	
 
 }

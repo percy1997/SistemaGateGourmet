@@ -19,7 +19,8 @@
 
 	<br>
 	<div style="margin-left: 170px;" class="form-inline my-3 contenedor_tabla_material">
-		<button class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroMaterial"><i
+		<button onclick="ResetForm(document.getElementById('formRegistroMaterial'))"
+			class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroMaterial"><i
 				class="bi bi-plus-square"></i> Nuevo Material</button>
 		<button class="btn btn-primary ">Nuevo </button>
 	</div>
@@ -30,9 +31,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">:::: </h5>
-					<h5 class="modal-title mx-2" id="titulo"></h5>
-					<h5 class="modal-title" id="exampleModalLabel"> MATERIAL ::::</h5>
+					<h5 class="modal-title" id="exampleModalLabel">:::: <span id="spanTitulo"></span> MATERIAL ::::</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -156,7 +155,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 	<script th:src="@{/resources/alertifyjs/alertify.js}"></script>
 	<script th:src="@{/resources/alertifyjs/alertify.min.js}"></script>
-	
+
 	<script th:inline="javascript" th:if="${MENSAJE!=null}">
 		//recuperar atributo "MENSAJE"
 		let msg =/*[[${MENSAJE}]]*/
@@ -165,13 +164,22 @@
 			});
 	</script>
 
-
 	<script>
 		//Limpiar el formulario de registro
 		$(document).on("click", ".btn-nuevo", function () {
-			$("#titulo").text("REGISTRAR");
+			$("#spanTitulo").text("REGISTRAR");
 			$("#formRegistroMaterial").trigger("reset");
 		})
+	</script>
+
+	<script>
+		//metodo para resetear los campos con mensajes de validacion
+		function ResetForm(form) {
+			form.classList.remove('was-validated');
+			form.querySelectorAll(".is-invalid").forEach(el => el.classList.remove('is-invalid'));
+
+			form.reset();
+		}
 	</script>
 
 	<script>
@@ -204,7 +212,7 @@
 		$(document).on("click", ".btn-actualizar", function () {
 			let cod;
 			//obtener el codigo de la fila seleccionada
-			$("#titulo").text("ACTUALIZAR");
+			$("#spanTitulo").text("ACTUALIZAR");
 			cod = $(this).parents("tr").find("td")[0].innerHTML;
 			//enviamos el codigo para obtener el JSON del material
 			$.get("/material/obtenerMaterial?cod=" + cod, function (response) {
