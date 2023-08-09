@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mantenimiento de Material</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+		integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+	<link rel="stylesheet" th:href="@{/resources/css/styles.css}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	<link rel="stylesheet" th:href="@{/resources/alertifyjs/css/alertify.css}">
+	<link rel="stylesheet" th:href="@{/resources/alertifyjs/css/alertify.min.css}">
+</head>
+
+<body id="fondo_material">
+
+	<br>
+	<div style="margin-left: 170px;" class="form-inline my-3 contenedor_tabla_material">
+		<button onclick="ResetForm(document.getElementById('formRegistroAerolinea'))"
+			class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroAerolinea"><i
+				class="bi bi-plus-square"></i> Nueva Aerolínea</button>
+		<button class="btn btn-primary ">Nuevo </button>
+	</div>
+
+	<!-- Modal Nueva Aerolinea -->
+	<div class="modal fade" id="modalRegistroAerolinea" tabindex="-1" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">:::: <span id="spanTitulo"></span> AEROLÍNEA ::::
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form id="formRegistroAerolinea" th:action="@{/aerolinea/registrar}" method="post"
+					class="needs-validation" novalidate>
+					<input type="hidden" id="codigoAerolinea" name="codigoAerolinea" value="0">
+					<div class="modal-body">
+						<div class="form-row">
+							<div class="col-md-12 mb-3">
+								<label for="nombreAerolinea">Nombre de aerolínea</label>
+								<input id="nombreAerolinea" name="nombreAerolinea" type="text" class="form-control"
+									required>
+								<div class="invalid-feedback">
+									Ingrese un nombre.
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-6 mb-3">
+								<label for="abreviaturaAerolinea">Abreviatura IATA</label>
+								<input minlength="2" maxlength="2" id="abreviaturaAerolinea" name="abreviaturaAerolinea"
+									type="text" class="form-control" required>
+								<div class="invalid-feedback">
+									Ingrese código IATA.
+								</div>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="indicativoAerolinea">Indicativo</label>
+								<input id="indicativoAerolinea" name="indicativoAerolinea" type="text"
+									class="form-control" required>
+								<div class="invalid-feedback">
+									Ingrese indicativo de la aerolínea.
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" type="submit">Agregar</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Fin Modal -->
+
+	<br>
+	<div class="contenedor_tabla_material">
+		<div class="container-fluid px-5">
+			<table id="tablaAerolinea" class="table table-striped table-bordered my-4 tabla_material">
+				<thead>
+					<tr>
+						<th>Código</th>
+						<th>Aeropuerto</th>
+						<th>Código IATA</th>
+						<th>Región/Ciudad/Estado</th>
+						<th>País</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="fila:${aeropuertos}">
+						<td th:text="${fila.codigoAeropuerto}"></td>
+						<td th:text="${fila.nombreAeropuerto}"></td>
+						<td th:text="${fila.codigoIataAeropuerto}"></td>
+						<td th:text="${fila.regiones.nombreRegion}"></td>
+						<td th:text="${fila.paises.nombrePais}"></td>
+						<td class="tamaño_celda" style="text-align: center;"><button
+						 onclick="ResetForm(document.getElementById('formRegistroAerolinea'))"
+								class="btn btn-warning btn-actualizar" data-toggle="modal"
+								data-target="#modalRegistroAerolinea"><i class="bi bi-pencil"></i></button></td>
+						<td class="tamaño_celda" style="text-align: center;"><button
+								class="btn btn-danger btn-eliminar"><i class="bi bi-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+	<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+		integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+		crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script th:src="@{/resources/alertifyjs/alertify.js}"></script>
+	<script th:src="@{/resources/alertifyjs/alertify.min.js}"></script>
+
+	<script th:inline="javascript" th:if="${MENSAJE!=null}">
+		//recuperar atributo "MENSAJE"
+		let msg =/*[[${MENSAJE}]]*/
+			toastr.success(msg, toastr.options = {
+				"timeOut": "2000",
+			});
+	</script>
+
+	<script>
+		//limpiar formulario
+		$(document).on("click", ".btn-nuevo", function () {
+			$("#spanTitulo").text("REGISTRAR");
+			$("#formRegistroAerolinea").trigger("reset");
+		})
+
+	</script>
+
+	<script>
+		//metodo para resetear los campos con mensajes de validacion
+		function ResetForm(form) {
+			form.classList.remove('was-validated');
+			form.querySelectorAll(".is-invalid").forEach(el => el.classList.remove('is-invalid'));
+
+			form.reset();
+		}
+	</script>
+
+	<script>
+		$(document).on("click", ".btn-actualizar", function () {
+			let cod;
+			//obtener el codigo de la fila seleccionada
+			$("#spanTitulo").text("ACTUALIZAR");
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			//enviamos el codigo para obtener el JSON del material
+			$.get("/aerolinea/obtenerJSONAer?cod=" + cod, function (response) {
+				$("#codigoAerolinea").val(response.codigoAerolinea);
+				$("#nombreAerolinea").val(response.nombreAerolinea);
+				$("#abreviaturaAerolinea").val(response.abreviaturaAerolinea);
+				$("#indicativoAerolinea").val(response.indicativoAerolinea);
+			})
+
+		})
+	</script>
+
+	<script>
+			// Example starter JavaScript for disabling form submissions if there are invalid fields
+			(function () {
+				'use strict';
+				window.addEventListener('load', function () {
+					// Fetch all the forms we want to apply custom Bootstrap validation styles to
+					var forms = document.getElementsByClassName('needs-validation');
+					// Loop over them and prevent submission
+					var validation = Array.prototype.filter.call(forms, function (form) {
+						form.addEventListener('submit', function (event) {
+							if (form.checkValidity() === false) {
+								event.preventDefault();
+								event.stopPropagation();
+							}
+							form.classList.add('was-validated');
+						}, false);
+					});
+				}, false);
+			})();
+	</script>
+</body>
+
+</html>
