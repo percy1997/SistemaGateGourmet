@@ -17,4 +17,12 @@ public class AeropuertoServices {
 	public List<Aeropuerto> listaAeropuertos(){
 		return repo.findAll();
 	}
+	
+	public void actualizar(Aeropuerto a) {
+		repo.save(a);
+	}
+	
+	public Aeropuerto buscarAeropuerto(int cod) {
+		return repo.findById(cod).orElse(null);
+	}
 }

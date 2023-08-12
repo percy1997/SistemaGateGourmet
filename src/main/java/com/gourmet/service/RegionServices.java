@@ -25,5 +25,10 @@ public class RegionServices {
 	public List<Region> listaRegiones(){
 		return repo.findAll();
 	}
+	
+	//metodo para listar regiones por el codigo del pais
+	public List<Region> listarRegionesPorPais(int cod){
+		return repo.listarRegionesPorPais(cod);
+	}
 
 }
