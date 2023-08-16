@@ -18,6 +18,10 @@ public class AeropuertoServices {
 		return repo.findAll();
 	}
 	
+	public void registrarAeropuerto(Aeropuerto a) {
+		repo.save(a);
+	}
+	
 	public void actualizar(Aeropuerto a) {
 		repo.save(a);
 	}

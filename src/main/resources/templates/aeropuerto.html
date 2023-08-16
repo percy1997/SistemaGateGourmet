@@ -19,11 +19,14 @@
 
 	<br>
 	<div style="margin-left: 170px;" class="form-inline my-3 contenedor_tabla_material">
-		<button class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroAeropuerto"><i
+		<button onclick="ResetForm(document.getElementById('formRegistroAeropuerto'))"
+		class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroAeropuerto"><i
 				class="bi bi-plus-square"></i> Nuevo Aeropuerto</button>
-		<button class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroPais"><i
+		<button onclick="ResetForm(document.getElementById('formRegistroPais'))"
+		class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroPais"><i
 				class="bi bi-plus-square"></i> Nuevo País</button>
-		<button class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroRegion"><i
+		<button onclick="ResetForm(document.getElementById('formRegistroRegion'))"
+		class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroRegion"><i
 				class="bi bi-plus-square"></i> Nueva Región</button>
 	</div>
 
@@ -33,13 +36,13 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">:::: <span id="spanTitulo"></span> AEROLÍNEA ::::
+					<h5 class="modal-title" id="exampleModalLabel">:::: <span class="spanTitulo"></span> AEROPUERTO ::::
 					</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form id="formRegistroAerolinea" action="" method="post"
+				<form id="formRegistroAeropuerto" th:action="@{aeropuerto/guardarAeropuerto}" method="post"
 					class="needs-validation" novalidate>
 					<input type="hidden" id="codigoAeropuerto" name="codigoAeropuerto" value="0">
 					<div class="modal-body">
@@ -56,7 +59,7 @@
 						<div class="form-row">
 							<div class="col-md-4 mb-3">
 								<label for="codigoIataAeropuerto">Código IATA</label>
-								<input minlength="2" maxlength="2" id="codigoIataAeropuerto" name="codigoIataAeropuerto"
+								<input minlength="3" maxlength="3" id="codigoIataAeropuerto" name="codigoIataAeropuerto"
 									type="text" class="form-control" required>
 								<div class="invalid-feedback">
 									Ingrese código IATA.
@@ -77,7 +80,7 @@
 							<div class="col-md-4 mb-3">
 								<label for="regiones">Región</label>
 								<select id="regiones" name="regiones" class="form-control mr-sm-2" required>
-									<option></option>
+									<option value="">--Seleccione--</option>
 								</select>
 								<div class="invalid-feedback">
 									Seleccione una región.
@@ -94,9 +97,99 @@
 			</div>
 		</div>
 	</div>
+	<!-- Fin Modal -->
+	
+	<!-- Modal Nuevo Pais -->
+	<div class="modal fade" id="modalRegistroPais" tabindex="-1" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">:::: <span class="spanTitulo"></span> PAÍS ::::
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form id="formRegistroPais" th:action="@{aeropuerto/guardarPais}" method="post"
+					class="needs-validation" novalidate>
+					<input type="hidden" id="codigoPais" name="codigoPais" value="0">
+					<div class="modal-body">
+						<div class="form-row">
+							<div class="col-md-12 mb-3">
+								<label for="nombrePais">Nombre de País</label>
+								<input id="nombrePais" name="nombrePais" type="text" class="form-control"
+									required>
+								<div class="invalid-feedback">
+									Ingrese un nombre.
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" type="submit">Agregar</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<!-- Fin Modal -->
 
+	<!-- Modal Nuevo Region	 -->
+	<div class="modal fade" id="modalRegistroRegion" tabindex="-1" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">:::: <span class="spanTitulo"></span> REGIÓN ::::
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form id="formRegistroRegion" th:action="@{aeropuerto/guardarRegion}" method="post"
+					class="needs-validation" novalidate>
+					<input type="hidden" id="codigoRegion" name="codigoRegion" value="0">
+					<div class="modal-body">
+						<div class="form-row">
+							<div class="col-md-6 mb-3">
+								<label for="nombreRegion">Nombre de la Región</label>
+								<input id="nombreRegion" name="nombreRegion" type="text" class="form-control"
+									required>
+								<div class="invalid-feedback">
+									Ingrese un nombre.
+								</div>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="paises">País</label>
+								<select id="paises" name="paises" class="form-control mr-sm-2" required>
+									<option value="" selected>--Seleccione--</option>
+									<option name="cboPais" th:each="listaPaises:${paises}"
+										th:text="${listaPaises.nombrePais}" th:value="${listaPaises.codigoPais}">
+									</option>
+								</select>
+								<div class="invalid-feedback">
+									Seleccione una región.
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" type="submit">Agregar</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Fin Modal -->
 	<br>
 	<div class="contenedor_tabla_material">
 		<div class="container-fluid px-5">
@@ -120,7 +213,7 @@
 						<td th:text="${fila.regiones.nombreRegion}"></td>
 						<td th:text="${fila.paises.nombrePais}"></td>
 						<td class="tamaño_celda" style="text-align: center;"><button
-								onclick="ResetForm(document.getElementById('formRegistroAerolinea'))"
+								onclick="ResetForm(document.getElementById('formRegistroAeropuerto'))"
 								class="btn btn-warning btn-actualizar" data-toggle="modal"
 								data-target="#modalRegistroAeropuerto"><i class="bi bi-pencil"></i></button></td>
 						<td class="tamaño_celda" style="text-align: center;"><button
@@ -151,30 +244,16 @@
 			});
 	</script>
 	
-	<script>
-		let cod ;
-		
-		$(document).on("change","#paises", function(){
-			//obtener el codigo del pais
-			let codigo = $("#paises").val();
-			//limpiar combo region y agregar una primera opcion "seleccione"
-			$("#regiones").empty().append("<option></option>")
-			$.get("aeropuerto/listarRegionPorCodigoPais?codigoPais="+codigo,function(response){
-				$.each(response,function(index,item){
-					$("#regiones").append("<option value='"+item.codigoRegion+"'>"+item.nombreRegion+"</option>");
-				})
-				$("#regiones").val(cod);					
 
-			})
-		})
-		
-	</script>
 
 	<script>
 		//limpiar formulario
 		$(document).on("click", ".btn-nuevo", function () {
-			$("#spanTitulo").text("REGISTRAR");
-			$("#formRegistroAerolinea").trigger("reset");
+			$(".spanTitulo").text("REGISTRAR");
+			$("#formRegistroAeropuerto").trigger("reset");
+			$("#formRegistroPais").trigger("reset");
+			$("#formRegistroRegion").trigger("reset");
+
 		})
 
 	</script>
@@ -190,17 +269,43 @@
 	</script>
 
 	<script>
+		
+		codReg=-1;
 		$(document).on("click", ".btn-actualizar", function () {
+			$("#regiones").empty();
 			let cod;
 			//obtener el codigo de la fila seleccionada
-			$("#spanTitulo").text("ACTUALIZAR");
+			$(".spanTitulo").text("ACTUALIZAR");
 			cod = $(this).parents("tr").find("td")[0].innerHTML;
 			//enviamos el codigo para obtener el JSON del material
 			$.get("/aeropuerto/buscarAer?codigoAer=" + cod, function (response) {
-				$("#codigoAerolinea").val(response.codigoAerolinea);
-				$("#nombreAerolinea").val(response.nombreAerolinea);
-				$("#abreviaturaAerolinea").val(response.abreviaturaAerolinea);
-				$("#indicativoAerolinea").val(response.indicativoAerolinea);
+				$("#codigoAeropuerto").val(response.codigoAeropuerto);
+				$("#nombreAeropuerto").val(response.nombreAeropuerto);
+				$("#codigoIataAeropuerto").val(response.codigoIataAeropuerto);
+				$("#paises").val(response.regiones.paises.codigoPais);
+				//simulamos el seleccionar una opcion del combo, de lo contrario no
+				// muestra datos en el combo "regiones"
+				codReg=response.regiones.codigoRegion;
+				$("#paises").trigger("change");
+
+
+		
+		$(document).on("change","#paises", function(){
+			//obtener el codigo del pais
+			let codigo = $(this).val();
+			//limpiar combo region y agregar una primera opcion "seleccione"
+			$("#regiones").empty().append("<option></option>")
+			$.get("aeropuerto/listarRegionPorCodigoPais?codigoPais="+codigo,function(response){
+				$.each(response,function(index,item){
+					$("#regiones").append("<option value='"+item.codigoRegion+"'>"+item.nombreRegion+"</option>");
+				})
+				$("#regiones").val(codReg);					
+
+
+			})
+		})
+				
+				
 			})
 
 		})

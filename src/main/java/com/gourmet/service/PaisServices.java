@@ -17,4 +17,8 @@ public class PaisServices {
 	public List<Pais> listaPaises(){
 		return repo.findAll();	
 	}
+	
+	public void registrarPais(Pais p) {
+		repo.save(p);
+	}
 }
