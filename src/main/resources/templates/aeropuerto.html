@@ -20,13 +20,12 @@
 	<br>
 	<div style="margin-left: 170px;" class="form-inline my-3 contenedor_tabla_material">
 		<button onclick="ResetForm(document.getElementById('formRegistroAeropuerto'))"
-		class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroAeropuerto"><i
+			class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroAeropuerto"><i
 				class="bi bi-plus-square"></i> Nuevo Aeropuerto</button>
-		<button onclick="ResetForm(document.getElementById('formRegistroPais'))"
-		class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroPais"><i
-				class="bi bi-plus-square"></i> Nuevo País</button>
+		<button onclick="ResetForm(document.getElementById('formRegistroPais'))" class="btn btn-primary mr-2 btn-nuevo"
+			data-toggle="modal" data-target="#modalRegistroPais"><i class="bi bi-plus-square"></i> Nuevo País</button>
 		<button onclick="ResetForm(document.getElementById('formRegistroRegion'))"
-		class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroRegion"><i
+			class="btn btn-primary mr-2 btn-nuevo" data-toggle="modal" data-target="#modalRegistroRegion"><i
 				class="bi bi-plus-square"></i> Nueva Región</button>
 	</div>
 
@@ -74,13 +73,13 @@
 									</option>
 								</select>
 								<div class="invalid-feedback">
-									Seleccione una región.
+									Seleccione un país.
 								</div>
 							</div>
 							<div class="col-md-4 mb-3">
 								<label for="regiones">Región</label>
 								<select id="regiones" name="regiones" class="form-control mr-sm-2" required>
-									<option value="">--Seleccione--</option>
+									<option value=""></option>
 								</select>
 								<div class="invalid-feedback">
 									Seleccione una región.
@@ -98,10 +97,9 @@
 		</div>
 	</div>
 	<!-- Fin Modal -->
-	
+
 	<!-- Modal Nuevo Pais -->
-	<div class="modal fade" id="modalRegistroPais" tabindex="-1" aria-labelledby="exampleModalLabel"
-		aria-hidden="true">
+	<div class="modal fade" id="modalRegistroPais" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -111,15 +109,14 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form id="formRegistroPais" th:action="@{aeropuerto/guardarPais}" method="post"
-					class="needs-validation" novalidate>
+				<form id="formRegistroPais" th:action="@{aeropuerto/guardarPais}" method="post" class="needs-validation"
+					novalidate>
 					<input type="hidden" id="codigoPais" name="codigoPais" value="0">
 					<div class="modal-body">
 						<div class="form-row">
 							<div class="col-md-12 mb-3">
 								<label for="nombrePais">Nombre de País</label>
-								<input id="nombrePais" name="nombrePais" type="text" class="form-control"
-									required>
+								<input id="nombrePais" name="nombrePais" type="text" class="form-control" required>
 								<div class="invalid-feedback">
 									Ingrese un nombre.
 								</div>
@@ -158,8 +155,7 @@
 						<div class="form-row">
 							<div class="col-md-6 mb-3">
 								<label for="nombreRegion">Nombre de la Región</label>
-								<input id="nombreRegion" name="nombreRegion" type="text" class="form-control"
-									required>
+								<input id="nombreRegion" name="nombreRegion" type="text" class="form-control" required>
 								<div class="invalid-feedback">
 									Ingrese un nombre.
 								</div>
@@ -199,8 +195,8 @@
 						<th>Código</th>
 						<th>Aeropuerto</th>
 						<th>Código IATA</th>
-						<th>Región/Ciudad/Estado</th>
 						<th>País</th>
+						<th>Región/Ciudad/Estado</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -210,8 +206,8 @@
 						<td th:text="${fila.codigoAeropuerto}"></td>
 						<td th:text="${fila.nombreAeropuerto}"></td>
 						<td th:text="${fila.codigoIataAeropuerto}"></td>
-						<td th:text="${fila.regiones.nombreRegion}"></td>
 						<td th:text="${fila.paises.nombrePais}"></td>
+						<td th:text="${fila.regiones.nombreRegion}"></td>
 						<td class="tamaño_celda" style="text-align: center;"><button
 								onclick="ResetForm(document.getElementById('formRegistroAeropuerto'))"
 								class="btn btn-warning btn-actualizar" data-toggle="modal"
@@ -243,8 +239,6 @@
 				"timeOut": "2000",
 			});
 	</script>
-	
-
 
 	<script>
 		//limpiar formulario
@@ -253,7 +247,7 @@
 			$("#formRegistroAeropuerto").trigger("reset");
 			$("#formRegistroPais").trigger("reset");
 			$("#formRegistroRegion").trigger("reset");
-
+			$("#regiones").empty();
 		})
 
 	</script>
@@ -269,10 +263,9 @@
 	</script>
 
 	<script>
-		
-		codReg=-1;
+
+		let codReg;
 		$(document).on("click", ".btn-actualizar", function () {
-			$("#regiones").empty();
 			let cod;
 			//obtener el codigo de la fila seleccionada
 			$(".spanTitulo").text("ACTUALIZAR");
@@ -285,27 +278,24 @@
 				$("#paises").val(response.regiones.paises.codigoPais);
 				//simulamos el seleccionar una opcion del combo, de lo contrario no
 				// muestra datos en el combo "regiones"
-				codReg=response.regiones.codigoRegion;
+				codReg = response.regiones.codigoRegion;
 				$("#paises").trigger("change");
+			})
+		})
 
-
-		
-		$(document).on("change","#paises", function(){
+		$(document).on("change", "#paises", function () {
 			//obtener el codigo del pais
 			let codigo = $(this).val();
 			//limpiar combo region y agregar una primera opcion "seleccione"
 			$("#regiones").empty().append("<option></option>")
-			$.get("aeropuerto/listarRegionPorCodigoPais?codigoPais="+codigo,function(response){
-				$.each(response,function(index,item){
-					$("#regiones").append("<option value='"+item.codigoRegion+"'>"+item.nombreRegion+"</option>");
+			$.get("aeropuerto/listarRegionPorCodigoPais?codigoPais=" + codigo, function (response) {
+				$.each(response, function (index, item) {
+					$("#regiones").append("<option value='" + item.codigoRegion + "'>" + item.nombreRegion + "</option>");
 				})
-				$("#regiones").val(codReg);					
+				$("#regiones").val(codReg);
 
 
-			})
-		})
-				
-				
+
 			})
 
 		})

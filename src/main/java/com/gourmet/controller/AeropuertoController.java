@@ -39,8 +39,8 @@ public class AeropuertoController {
 	
 	@RequestMapping("listarRegionPorCodigoPais")
 	@ResponseBody
-	public List<Region> regionesPorPais(@RequestParam("codigoPais") int codi){		
-		return regSer.listarRegionesPorPais(codi);
+	public List<Region> regionesPorPais(@RequestParam("codigoPais") Integer codi){
+		return regSer.listarRegionesPorPais(codi);			
 	}
 	
 	@RequestMapping("/buscarAer")
