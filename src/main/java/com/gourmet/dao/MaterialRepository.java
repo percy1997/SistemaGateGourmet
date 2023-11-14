@@ -17,4 +17,5 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
 	
 	@Query("select m from Material m where m.tipoServicio.codigoServicio = ?1")
 	public List<Material> listarMaterialPorServicio(int codigoSer);
+	
 }
