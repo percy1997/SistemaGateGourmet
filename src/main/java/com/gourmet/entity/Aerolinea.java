@@ -1,9 +1,7 @@
 package com.gourmet.entity;
 
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +32,18 @@ public class Aerolinea {
 	@JsonIgnore
 	List<Material> listaMaterial;
 
+	public List<MaterialDiarioPorFecha> getListaMaterialDPF() {
+		return listaMaterialDPF;
+	}
+
+	public void setListaMaterialDPF(List<MaterialDiarioPorFecha> listaMaterialDPF) {
+		this.listaMaterialDPF = listaMaterialDPF;
+	}
+
+	@OneToMany(mappedBy = "aerolinea")
+	@JsonIgnore
+	List<MaterialDiarioPorFecha> listaMaterialDPF;
+	
 	public Integer getCodigoAerolinea() {
 		return codigoAerolinea;
 	}
@@ -74,5 +84,4 @@ public class Aerolinea {
 		this.listaMaterial = listaMaterial;
 	}
 
-	
 }

@@ -37,30 +37,57 @@
 		</div>
 	</div>
 
+
+	<!-- formulario de material por fecha   -->
+	<div class="container my-5">
+	<form class="formulariompf" id="formulariompf" method="post" th:action="@{/registroDiario/registrarmpf}">
+		<label for="fecha">Fecha Actual:</label>
+		<input readonly type="date" id="fechaPagina" name="fechaPagina">
+		<button type="submit" class="btn-boton">Guardar</button>
+	</form>
+	</div>
+	<!-- fin formulario de material por fecha   -->
+
 	<div>
-		<form id="formRegistroDiario" action="" method="post" class="needs-validation mt-5" novalidate>
-			<div class="formform container">
-				<div class="form-row">
-					<div class="row" th:each="row:${material}">
-						<div class="col-md-8 mb-3">
-							<label for="cantidadDiaria" th:text="${row.descripcionMaterial}"></label>
-							<input id="cantidadDiaria" name="cantidadDiaria" type="text" class="form-control"
-								required>
-							<div class="invalid-feedback">
-								Ingrese una descripción.
+
+		<!-- formulario de material    -->
+
+		<div class="formform container">
+			<div class="form-row">
+				<div class="row" th:each="row:${material}">
+					<div>
+						<form class="formulario" id="formulario" method="post"
+							th:action="@{/registroDiario/registrar}">
+							<!--	<input th:value="${dato}" name="codigoAerolinea"> -->
+									<input readonly type="date" id="fecha" name="fecha" th:value="${fechaActual}">
+									<input th:value="${dato}" name="codigoAerolinea">
+							<input  th:value="${row.codigoMaterial}" name="codigoMaterial">
+							<div class="col-md-8 mb-3">
+								<label for="cantidadDiaria" th:text="${row.descripcionMaterial}"></label>
+								<input id="cantidadDiaria" name="cantidadDiaria" type="text" class="form-control"
+									required>
+								<div class="invalid-feedback">
+									Ingrese una descripción.
+								</div>
 							</div>
-						</div>
+						</form>
 					</div>
 				</div>
-
-				<div class="modal-footer">
-					<button class="btn btn-success" type="submit">Agregar</button>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-				</div>
 			</div>
-		</form>
+
+			<div class="modal-footer">
+				<button class="btn btn-success btn-agregar" type="submit">Agregar</button>
+			</div>
+		</div>
+
+		<!-- fin formulario de material   -->
+
 	</div>
 	<br>
+
+	<form id="formCodigoAerolinea" method="post" th:action="@{/registroDiario/formulario}">
+		<input type="hidden" id="valorCodigo" name="cod">
+	</form>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
@@ -83,10 +110,65 @@
 		$(document).on("click", ".btn-aer", function () {
 			let cod;
 			cod = $(this).val();
-			console.log(cod);
+			$("#valorCodigo").val(cod);
+			$("#formCodigoAerolinea").submit();
 		})
 	</script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener la fecha actual
+        var fechaActual = new Date();
+        // Formatear la fecha en el formato "YYYY-MM-DD"
+        var formattedFecha = fechaActual.toISOString().split('T')[0];
+
+        // Establecer el valor del campo de fecha
+        document.getElementById('fechaPagina').value = formattedFecha;
+    });
+</script>
+
+	<script>
+		$(document).on("click", ".btn-agregar", function () {
+			$(".formulario").each(function (index, formulario) {
+				var formData = $(formulario).serialize();
+
+				$.ajax({
+					type: "POST",
+					url: "/registroDiario/registrar",
+					data: formData,
+					success: function (response) {
+						console.log(response);
+						window.location.href = "/registroDiario";
+					},
+					error: function (error) {
+						console.error("Error al enviar el formulario", error);
+					}
+				});
+			});
+		})
+	</script>
+	
+<!--		<script>
+		$(document).on("click", ".btn-boton", function () {
+			
+				var formulario = $(this).closest("form");
+           		var formData = formulario.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/registroDiario/registrarmpf",
+                data: formData,
+                success: function(response) {
+                    console.log(response);
+                    // Puedes realizar acciones adicionales después de guardar
+                },
+                error: function(error) {
+                    console.error("Error al enviar el formulario", error);
+                }
+            });
+});
+	</script>
+-->	
 	<script>
 		//metodo para resetear los campos con mensajes de validacion
 		function ResetForm(form) {

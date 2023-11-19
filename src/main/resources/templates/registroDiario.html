@@ -28,12 +28,15 @@
 	<br>
 	<div th:each="fila:${aerolineas}">
 		<div style="margin-left: 170px;" class="form-inline my-3 contenedor_tabla_material">
-			<button th:value="${fila.codigoAerolinea}" th:text="${fila.indicativoAerolinea}" class="btn btn-warning btn-aer"></button>
+			<button th:value="${fila.codigoAerolinea}" th:text="${fila.indicativoAerolinea}" 
+			class="btn btn-warning btn-aer"></button>
 		</div>
 	</div>
 	<br>
-	
-	
+		
+	<form id="formCodigoAerolinea" method="post" th:action="@{/registroDiario/formulario}">
+		<input type="hidden" id="valorCodigo" name="cod">
+	</form>
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -57,7 +60,8 @@
 		$(document).on("click", ".btn-aer", function () {
 			let cod;
 			cod = $(this).val();
-			console.log(cod);
+			$("#valorCodigo").val(cod);
+			$("#formCodigoAerolinea").submit();	
 		})
 	</script>
 
