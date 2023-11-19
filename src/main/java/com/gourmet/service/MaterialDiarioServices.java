@@ -1,5 +1,7 @@
 package com.gourmet.service;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,4 +17,31 @@ public class MaterialDiarioServices {
 	public void registrar(MaterialDiario m) {
 		repo.save(m);
 	}
+	
+	/*public void registrar(MaterialDiarioPorFecha m) {
+		repo.save(m);
+	}
+	
+	public MaterialDiarioPorFecha obtenerMaterialPorAerFec(LocalDate fecha, int codigo) {
+		return repo.existeMaterialCodFec(fecha, codigo);
+	}
+	
+	public boolean buscarFecha(LocalDate fecha) {
+		if (repo.existeFecha(fecha)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean existeRegistroPorFecha(LocalDate fecha) {
+		return repo.noExistePorFecha(fecha);*/
+	
+	public boolean existeRegistro(int codigo, LocalDate fecha) {
+		if (repo.existeRegistro(codigo, fecha)) {
+			return true;
+		} else {
+			return false;
+		}
+	} 
 }

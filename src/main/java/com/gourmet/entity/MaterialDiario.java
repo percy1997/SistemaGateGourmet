@@ -1,5 +1,6 @@
 package com.gourmet.entity;
 
+import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,16 +22,35 @@ public class MaterialDiario {
 	@Column(name = "cantidad")
 	private int cantidadMaterialDiario;
 	
-	@ManyToOne
-	@JoinColumn(name ="cod_mat_df")
-	private MaterialDiarioPorFecha materialDPF;
+	@Column(name="fecha_mat_d")
+	private LocalDate fechaMDPF;
 	
 	@ManyToOne
 	@JoinColumn(name ="cod_mat")
 	private Material material;
 
+	@ManyToOne
+	@JoinColumn(name ="cod_aer")
+	private Aerolinea aerolinea;
+	
 	public Integer getCodigoMaterialDiario() {
 		return codigoMaterialDiario;
+	}
+
+	public LocalDate getFechaMDPF() {
+		return fechaMDPF;
+	}
+
+	public void setFechaMDPF(LocalDate fechaMDPF) {
+		this.fechaMDPF = fechaMDPF;
+	}
+
+	public Aerolinea getAerolinea() {
+		return aerolinea;
+	}
+
+	public void setAerolinea(Aerolinea aerolinea) {
+		this.aerolinea = aerolinea;
 	}
 
 	public void setCodigoMaterialDiario(Integer codigoMaterialDiario) {
@@ -43,14 +63,6 @@ public class MaterialDiario {
 
 	public void setCantidadMaterialDiario(int cantidadMaterialDiario) {
 		this.cantidadMaterialDiario = cantidadMaterialDiario;
-	}
-
-	public MaterialDiarioPorFecha getMaterialDPF() {
-		return materialDPF;
-	}
-
-	public void setMaterialDPF(MaterialDiarioPorFecha materialDPF) {
-		this.materialDPF = materialDPF;
 	}
 
 	public Material getMaterial() {

@@ -31,19 +31,19 @@ public class Aerolinea {
 	@OneToMany(mappedBy = "aerolinea")
 	@JsonIgnore
 	List<Material> listaMaterial;
-
-	public List<MaterialDiarioPorFecha> getListaMaterialDPF() {
-		return listaMaterialDPF;
-	}
-
-	public void setListaMaterialDPF(List<MaterialDiarioPorFecha> listaMaterialDPF) {
-		this.listaMaterialDPF = listaMaterialDPF;
-	}
-
+	
 	@OneToMany(mappedBy = "aerolinea")
 	@JsonIgnore
-	List<MaterialDiarioPorFecha> listaMaterialDPF;
+	List<MaterialDiario> listaMaterialDiario;
 	
+	public List<MaterialDiario> getListaMaterialDiario() {
+		return listaMaterialDiario;
+	}
+
+	public void setListaMaterialDiario(List<MaterialDiario> listaMaterialDiario) {
+		this.listaMaterialDiario = listaMaterialDiario;
+	}
+
 	public Integer getCodigoAerolinea() {
 		return codigoAerolinea;
 	}

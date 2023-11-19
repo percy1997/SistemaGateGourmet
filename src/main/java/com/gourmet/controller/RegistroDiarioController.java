@@ -14,9 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gourmet.entity.Aerolinea;
 import com.gourmet.entity.Material;
 import com.gourmet.entity.MaterialDiario;
-import com.gourmet.entity.MaterialDiarioPorFecha;
 import com.gourmet.service.AerolineaServices;
-import com.gourmet.service.MaterialDiarioFechaServices;
 import com.gourmet.service.MaterialDiarioServices;
 import com.gourmet.service.MaterialServices;
 
@@ -32,9 +30,6 @@ public class RegistroDiarioController {
 	
 	@Autowired
 	private MaterialDiarioServices matDiaSer;
-	
-	@Autowired
-	private MaterialDiarioFechaServices matDiaFecSer;
 	
 	@RequestMapping("")
 	public String listaInicial(Model model) {
@@ -65,35 +60,54 @@ public class RegistroDiarioController {
 			@RequestParam("codigoAerolinea") int codigoAerolinea,
 			@RequestParam("fecha") String fecha,
 			@RequestParam("cantidadDiaria") int cantidad,
-			@RequestParam("codigoMaterial") int codigoMaterial) {
+			@RequestParam("codigoMaterial") int codigoMaterial,
+			RedirectAttributes redirect) {
 		model.addAttribute("aerolineas", aerSer.listar());
 		
-		boolean fechaEncontrada = matDiaFecSer.buscarFecha(LocalDate.parse(fecha));
+		boolean registroEncontrado = matDiaSer.existeRegistro(codigoMaterial, LocalDate.parse(fecha));
 		
-		if(fechaEncontrada == false) {	
-			
-			MaterialDiarioPorFecha mdpf = new MaterialDiarioPorFecha();
-			Aerolinea aer = new Aerolinea();
-			aer.setCodigoAerolinea(codigoAerolinea);
-			mdpf.setAerolinea(aer);		
-			mdpf.setFechaMDPF(LocalDate.parse(fecha));
-			matDiaFecSer.registrar(mdpf);
-			
-			
+		if(registroEncontrado == true) {
 			MaterialDiario md = new MaterialDiario();
+			
 			md.setCantidadMaterialDiario(cantidad);
-			
-			md.setMaterialDPF(mdpf);
-			
+						
 			Material m = new Material();
 			m.setCodigoMaterial(codigoMaterial);
 			md.setMaterial(m);
 			
+			md.setFechaMDPF(LocalDate.parse(fecha));
+			
+			Aerolinea aer = new Aerolinea();
+			aer.setCodigoAerolinea(codigoAerolinea);
+			md.setAerolinea(aer);	
+			
 			matDiaSer.registrar(md);
+			redirect.addFlashAttribute("MENSAJE", "Registro exitoso");
+	        return ResponseEntity.ok("Registro exitoso");
 					
 		} else{
 			
-			MaterialDiarioPorFecha mdpf1 = matDiaFecSer.obtenerMaterialPorAerFec(LocalDate.parse(fecha), codigoAerolinea);
+		/*	MaterialDiario md = new MaterialDiario();
+			
+			md.setCantidadMaterialDiario(cantidad);
+						
+			Material m = new Material();
+			m.setCodigoMaterial(codigoMaterial);
+			md.setMaterial(m);
+			
+			md.setFechaMDPF(LocalDate.parse(fecha));
+			
+			Aerolinea aer = new Aerolinea();
+			aer.setCodigoAerolinea(codigoAerolinea);
+			md.setAerolinea(aer);	
+			
+			matDiaSer.registrar(md);
+	        return ResponseEntity.ok("Registro exitoso");
+*/			redirect.addFlashAttribute("MENSAJE", "Registro ya existe");
+	        return ResponseEntity.ok("Registro existe");
+
+	        
+			/*MaterialDiarioPorFecha mdpf1 = matDiaFecSer.obtenerMaterialPorAerFec(LocalDate.parse(fecha), codigoAerolinea);
 			MaterialDiario md = new MaterialDiario();
 			md.setCantidadMaterialDiario(cantidad);
 			
@@ -102,7 +116,7 @@ public class RegistroDiarioController {
 			Material m = new Material();
 			m.setCodigoMaterial(codigoMaterial);
 			md.setMaterial(m);		
-			matDiaSer.registrar(md);
+			matDiaSer.registrar(md);*/
 		}
 		
 	/*	MaterialDiario md = new MaterialDiario();
@@ -118,15 +132,14 @@ public class RegistroDiarioController {
 		matDiaSer.registrar(md);*/
 		
 		//return "redirect:/registroDiario/formulario?cod=" + codigo;
-        return ResponseEntity.ok("Registro exitoso");
 	}
 	
-	@RequestMapping("registrarmpf")
+	/*@RequestMapping("registrarmpf")
 	public String registrarmpf(@RequestParam("codigoAerolinea") int codigoAerolinea,
 			@RequestParam("fecha") String fecha,
 			RedirectAttributes redirect) {
-		
-		
+		*/
+		/*
 		
 		MaterialDiarioPorFecha mdpf = new MaterialDiarioPorFecha();
 		Aerolinea aer = new Aerolinea();
@@ -146,6 +159,7 @@ public class RegistroDiarioController {
 			
 		//return "redirect:/registroDiario/formulario?cod=" + codigo;
         return "redirect:/registroDiario/formulario?cod=" + codigoAerolinea;
+        */
 		
 	/*	int validar = matDiaFecSer.existe(LocalDate.parse(fecha));
 		
@@ -158,5 +172,7 @@ public class RegistroDiarioController {
 		}
         return "redirect:/registroDiario/formulario?cod=" + codigoAerolinea;
 */
-	}
+	//}
+	
+	
 }
