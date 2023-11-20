@@ -21,8 +21,8 @@
 				<a class="nav-link" th:href="@{/aerolinea}">Aerolínea <span class="sr-only">(current)</span></a>
 				<a class="nav-link" th:href="@{/aeropuerto}">Aeropuerto</a>
 				<a class="nav-link" th:href="@{/material}">Material</a>
-				<a class="nav-link active" th:href="@{/registroDiario}">Registro Diario</a>
-				<a class="nav-link" th:href="@{/registroDiario}">Lista Registro Diario</a>
+				<a class="nav-link" th:href="@{/registroDiario}">Registro Diario</a>
+				<a class="nav-link active" th:href="@{/registroDiario/listar}">Lista Registro Diario</a>
 
 			</div>
 		</div>
@@ -33,23 +33,23 @@
 			<strong class="mr-3"><i class="bi bi-airplane"></i> Aerolinea : </strong>
 			<select id="aer" class="form-control mr-sm-2">
 				<option value="0" selected>--Seleccione--</option>
-				<option name="cboAerolinea" th:each="comboAer:${aerolineas}" th:utext="${comboAer.indicativoAerolinea}"
+				<option th:each="comboAer:${aerolineas}" th:utext="${comboAer.indicativoAerolinea}"
 					th:value="${comboAer.codigoAerolinea}"></option>
 			</select>
 			<strong class="mx-3"><i class="bi bi-briefcase"></i> Servicio : </strong>
-			<select id="ser" class="form-control mr-sm-2">
-				<option value="0" selected>--Seleccione--</option>
-				<option name="cboServicio" th:each="comboSer:${servicios}" th:text="${comboSer.nombreServicio}"
-					th:value="${comboSer.codigoServicio}"></option>
-			</select>
+				<input type="date" id="fecha">
 			<button id="btn-buscar" class="btn btn-outline-success my-2 my-sm-0 mx-3"><i class="bi bi-search"></i>
 				Buscar</button>
 		</div>
 	</div>
 	<br>
-		
 	<form id="formCodigoAerolinea" method="post" th:action="@{/registroDiario/formulario}">
 		<input type="hidden" id="valorCodigo" name="cod">
+	</form>
+
+			<form id="formularioListado" method="post" th:action="@{/registroDiario/listado}">
+				<input type="hidden" id="fechaFormulario" name="fechaFormulario">
+				<input type="hidden" id="codigoAerolinea" name="codigoAerolinea">
 	</form>
 
 
@@ -71,12 +71,13 @@
 	</script>
 
 	<script>
-		$(document).on("click", ".btn-aer", function () {
-			let cod;
-			cod = $(this).val();
-			$("#valorCodigo").val(cod);
-			$("#formCodigoAerolinea").submit();	
-		})
+		$(document).on("click", "#btn-buscar", function () {
+			let fecha = $("#fecha").val();
+			let aerolinea = $("#aer").val();
+			$("#fechaFormulario").val(fecha);
+			$("#codigoAerolinea").val(aerolinea);
+			$("#formularioListado").submit()
+	})
 	</script>
 
 	<script>
@@ -86,41 +87,6 @@
 			form.querySelectorAll(".is-invalid").forEach(el => el.classList.remove('is-invalid'));
 			form.reset();
 		}
-	</script>
-
-	<script>
-
-		let codReg;
-		$(document).on("click", ".btn-actualizar", function () {
-			let cod;
-			//obtener el codigo de la fila seleccionada
-			$(".spanTitulo").text("ACTUALIZAR");
-			cod = $(this).parents("tr").find("td")[0].innerHTML;
-			//enviamos el codigo para obtener el JSON del material
-			$.get("/aeropuerto/buscarAer?codigoAer=" + cod, function (response) {
-				$("#codigoAeropuerto").val(response.codigoAeropuerto);
-				$("#nombreAeropuerto").val(response.nombreAeropuerto);
-				$("#codigoIataAeropuerto").val(response.codigoIataAeropuerto);
-				$("#paises").val(response.regiones.paises.codigoPais);
-				//simulamos el seleccionar una opcion del combo, de lo contrario no
-				// muestra datos en el combo "regiones"
-				codReg = response.regiones.codigoRegion;
-				$("#paises").trigger("change");
-			})
-		})
-
-		$(document).on("change", "#paises", function () {
-			//obtener el codigo del pais
-			let codigo = $(this).val();
-			//limpiar combo region y agregar una primera opcion "seleccione"
-			$("#regiones").empty().append("<option></option>")
-			$.get("aeropuerto/listarRegionPorCodigoPais?codigoPais=" + codigo, function (response) {
-				$.each(response, function (index, item) {
-					$("#regiones").append("<option value='" + item.codigoRegion + "'>" + item.nombreRegion + "</option>");
-				})
-				$("#regiones").val(codReg);
-			})
-		})
 	</script>
 
 	<script>

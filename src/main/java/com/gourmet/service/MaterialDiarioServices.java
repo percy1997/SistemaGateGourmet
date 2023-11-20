@@ -1,6 +1,7 @@
 package com.gourmet.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,4 +45,8 @@ public class MaterialDiarioServices {
 			return false;
 		}
 	} 
+	
+	public List<MaterialDiario> listarMaterialesFechaAerolinea(LocalDate fecha, int codigo ){
+		return repo.lista(fecha, codigo);
+	}
 }

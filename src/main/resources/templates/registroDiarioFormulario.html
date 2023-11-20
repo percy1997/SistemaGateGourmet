@@ -40,11 +40,8 @@
 
 	<!-- formulario de material por fecha   -->
 	<div class="container my-5">
-	<form class="formulariompf" id="formulariompf" method="post" th:action="@{/registroDiario/registrarmpf}">
 		<label for="fecha">Fecha Actual:</label>
 		<input readonly type="date" id="fechaPagina" name="fechaPagina">
-		<button type="submit" class="btn-boton">Guardar</button>
-	</form>
 	</div>
 	<!-- fin formulario de material por fecha   -->
 
@@ -59,9 +56,9 @@
 						<form class="formulario" id="formulario" method="post"
 							th:action="@{/registroDiario/registrar}">
 							<!--	<input th:value="${dato}" name="codigoAerolinea"> -->
-									<input readonly type="date" id="fecha" name="fecha" th:value="${fechaActual}">
-									<input th:value="${dato}" name="codigoAerolinea">
-							<input  th:value="${row.codigoMaterial}" name="codigoMaterial">
+									<input hidden readonly type="date" id="fecha" name="fecha" th:value="${fechaActual}">
+									<input hidden th:value="${dato}" name="codigoAerolinea">
+							<input hidden th:value="${row.codigoMaterial}" name="codigoMaterial">
 							<div class="col-md-8 mb-3">
 								<label for="cantidadDiaria" th:text="${row.descripcionMaterial}"></label>
 								<input id="cantidadDiaria" name="cantidadDiaria" type="text" class="form-control"
@@ -119,6 +116,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Obtener la fecha actual
         var fechaActual = new Date();
+        
+        fechaActual.setDate(fechaActual.getDate() - 1);
+
         // Formatear la fecha en el formato "YYYY-MM-DD"
         var formattedFecha = fechaActual.toISOString().split('T')[0];
 

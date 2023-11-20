@@ -1,6 +1,7 @@
 package com.gourmet.dao;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,8 @@ public interface MaterialDiarioRepository extends JpaRepository<MaterialDiario, 
 	
 	 @Query("SELECT CASE WHEN COUNT(u) > 0 THEN false ELSE true END FROM MaterialDiario u WHERE u.material.codigoMaterial = ?1 and u.fechaMDPF = ?2")
 	    boolean existeRegistro(int codigo, LocalDate fecha);
+	 
+	 @Query("select m from MaterialDiario m where m.fechaMDPF = ?1 and m.aerolinea.codigoAerolinea = ?2")
+	    public List<MaterialDiario> lista(LocalDate fecha, int codigo );
+	 
 }

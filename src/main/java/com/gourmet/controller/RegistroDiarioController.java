@@ -1,8 +1,20 @@
 package com.gourmet.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +29,8 @@ import com.gourmet.entity.MaterialDiario;
 import com.gourmet.service.AerolineaServices;
 import com.gourmet.service.MaterialDiarioServices;
 import com.gourmet.service.MaterialServices;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/registroDiario")
@@ -87,92 +101,95 @@ public class RegistroDiarioController {
 					
 		} else{
 			
-		/*	MaterialDiario md = new MaterialDiario();
-			
-			md.setCantidadMaterialDiario(cantidad);
-						
-			Material m = new Material();
-			m.setCodigoMaterial(codigoMaterial);
-			md.setMaterial(m);
-			
-			md.setFechaMDPF(LocalDate.parse(fecha));
-			
-			Aerolinea aer = new Aerolinea();
-			aer.setCodigoAerolinea(codigoAerolinea);
-			md.setAerolinea(aer);	
-			
-			matDiaSer.registrar(md);
-	        return ResponseEntity.ok("Registro exitoso");
-*/			redirect.addFlashAttribute("MENSAJE", "Registro ya existe");
+			redirect.addFlashAttribute("MENSAJE", "Registro ya existe");
 	        return ResponseEntity.ok("Registro existe");
-
-	        
-			/*MaterialDiarioPorFecha mdpf1 = matDiaFecSer.obtenerMaterialPorAerFec(LocalDate.parse(fecha), codigoAerolinea);
-			MaterialDiario md = new MaterialDiario();
-			md.setCantidadMaterialDiario(cantidad);
-			
-			md.setMaterialDPF(mdpf1);
-			
-			Material m = new Material();
-			m.setCodigoMaterial(codigoMaterial);
-			md.setMaterial(m);		
-			matDiaSer.registrar(md);*/
 		}
 		
-	/*	MaterialDiario md = new MaterialDiario();
-		md.setCantidadMaterialDiario(cantidad);
-		
-		MaterialDiarioPorFecha mdpf = new MaterialDiarioPorFecha(1);
-		md.setMaterialDPF(mdpf);
-		
-		Material m = new Material();
-		m.setCodigoMaterial(codigoMaterial);
-		md.setMaterial(m);
-		
-		matDiaSer.registrar(md);*/
-		
-		//return "redirect:/registroDiario/formulario?cod=" + codigo;
 	}
 	
-	/*@RequestMapping("registrarmpf")
-	public String registrarmpf(@RequestParam("codigoAerolinea") int codigoAerolinea,
-			@RequestParam("fecha") String fecha,
-			RedirectAttributes redirect) {
-		*/
-		/*
+	@RequestMapping("listar")
+	public String listaBuscar(Model model) {
+		model.addAttribute("aerolineas", aerSer.listar());
+		return "registroDiarioListaBuscar";
+	}
+	
+	@RequestMapping("listado")
+	public String listado(Model model,
+			@RequestParam("fechaFormulario") String fecha,
+			@RequestParam("codigoAerolinea") int cboAerolinea) {
+		model.addAttribute("aerolineas", aerSer.listar());
+		model.addAttribute("items", matDiaSer.listarMaterialesFechaAerolinea(LocalDate.parse(fecha), cboAerolinea));		
+        model.addAttribute("dato1", fecha);
+        model.addAttribute("dato2", cboAerolinea);
 		
-		MaterialDiarioPorFecha mdpf = new MaterialDiarioPorFecha();
-		Aerolinea aer = new Aerolinea();
-		aer.setCodigoAerolinea(codigoAerolinea);
-		mdpf.setAerolinea(aer);		
-		mdpf.setFechaMDPF(LocalDate.parse(fecha));
+		return "registroDiarioListado";
+	}	
+	
+	@RequestMapping("/generar-excel")
+    public void generarExcel(@RequestParam("fechaExcel") String fecha,
+                             @RequestParam("codigoAerolineaExcel") int cboAerolinea,
+                             HttpServletResponse response) {
 
-		boolean fechaEncontrada = matDiaFecSer.buscarFecha(LocalDate.parse(fecha));
-		
-		if (fechaEncontrada) {
-			redirect.addFlashAttribute("MENSAJE", "Fecha existe");			
-		}
-		else {
-			redirect.addFlashAttribute("MENSAJE", "Registro exitoso");
-			matDiaFecSer.registrar(mdpf);
-		}
-			
-		//return "redirect:/registroDiario/formulario?cod=" + codigo;
-        return "redirect:/registroDiario/formulario?cod=" + codigoAerolinea;
-        */
-		
-	/*	int validar = matDiaFecSer.existe(LocalDate.parse(fecha));
-		
-		if (validar == 1) {
-			redirect.addFlashAttribute("MENSAJE", "Fecha existe");			
-	        return "redirect:/registroDiario/formulario?cod=" + codigoAerolinea;
-		} else {
-			redirect.addFlashAttribute("MENSAJE", "Registro exitoso");
-			matDiaFecSer.registrar(mdpf);
-		}
-        return "redirect:/registroDiario/formulario?cod=" + codigoAerolinea;
-*/
-	//}
-	
-	
+        // Obtén la lista de datos desde el servicio
+        List<MaterialDiario> listaExcel = matDiaSer.listarMaterialesFechaAerolinea(LocalDate.parse(fecha), cboAerolinea);
+
+        // Crear un libro de trabajo de Excel
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Materiales");
+
+            // Crear la fila de encabezados
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("Codigo");
+            headerRow.createCell(1).setCellValue("Material");
+            headerRow.createCell(2).setCellValue("Cantidad");
+            headerRow.createCell(3).setCellValue("Fecha");
+            headerRow.createCell(4).setCellValue("Aerolinea");
+
+            // Establecer el estilo de celda para los encabezados
+            CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            Font headerFont = workbook.createFont();
+            headerFont.setColor(IndexedColors.SKY_BLUE.getIndex());
+            headerStyle.setFont(headerFont);
+
+            for (int i = 0; i < headerRow.getPhysicalNumberOfCells(); i++) {
+                Cell cell = headerRow.getCell(i);
+                cell.setCellStyle(headerStyle);
+            }
+
+            CellStyle dateCellStyle = workbook.createCellStyle();
+            CreationHelper creationHelper = workbook.getCreationHelper();
+            dateCellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("dd-MM-yyyy"));
+
+            int rowNum = 1;
+            for (MaterialDiario material : listaExcel) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(material.getCodigoMaterialDiario());
+                row.createCell(1).setCellValue(material.getMaterial().getDescripcionMaterial());
+                row.createCell(2).setCellValue(material.getCantidadMaterialDiario());
+
+                Cell dateCell = row.createCell(3);
+                dateCell.setCellValue(material.getFechaMDPF());
+                dateCell.setCellStyle(dateCellStyle);
+
+                row.createCell(4).setCellValue(material.getAerolinea().getNombreAerolinea());
+            }
+
+            // Establecer el ancho de las columnas
+            sheet.setColumnWidth(1, 50 * 256); // Columna 2
+            sheet.setColumnWidth(3, 20 * 256); // Columna 3
+
+            // Configurar el tipo de contenido y encabezado para la respuesta
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=datos.xlsx");
+
+            // Escribir el libro de trabajo en la respuesta
+            workbook.write(response.getOutputStream());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
